@@ -11,5 +11,15 @@ Icon
 .Spotlight-V100
 .Trashes
 
+### Node ###
+lib-cov
+*.seed
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.gz
+
 ### NPM ###
 node_modules
