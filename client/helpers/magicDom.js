@@ -1,22 +1,40 @@
-var _ = function () {}
-
+var _ = {}
+var hi = function () {}
 var index = {length: 0};
 var classes = {};
 
-
-var Element = function (parent, text, length) {
-  this.id = length;
-
+var init = function() {
+  index[index.length] = new Element(null, div, null, index.length)
+  _.root = index[index.length]
 }
 
-_.prototype.make = function (name, parentID, text) {
+var Element = function (parent, type, text, length) {
+  this.id = length;
+  this.children = [];
+  this.parent = parent;
+}
+
+Element.prototype.track = function(func){
+  this.tracked = func;
+}
+
+Element.prototype.spawn = function(type, text) {
+  return new Element(this, type, text, index.length);
+}
+
+_.helloWorld = function() {
+  console.log('hello, world')
+  return true;
+}
+
+_.make = function (name, parentID, text) {
   var name = new Element(parentID, text, index.length)
   index[index.length] = name;
   index.length ++;
   return [name, index.length - 1];
 }
 
-_.prototype.style = function (id, css) {
+_.style = function (id, css) {
   if (classes.hasOwnProperty(css)) {
     classes[css].push(index[id])
   } else {
@@ -25,23 +43,24 @@ _.prototype.style = function (id, css) {
 }
 
 //returns an array of dom elements with a css class
-_.prototype.findByClass = function (css) {
+_.findByClass = function (css) {
   if (css) {
     return classes[css];
   }
   return [];
 }
 
-_.prototype.remove = function () {
+_.remove = function () {
 
 }
 
-_.prototype.findById = function (id) {
+_.findById = function (id) {
 
 }
+
 
 //removes everything
-_.prototype.clear = function () {
+_.clear = function () {
   for (var i = 0; i < index.length; i++){
 
   }

@@ -14,5 +14,5 @@ if(window.attachEvent) {
 }
 
 function main () {
-  hi();
+  _.hello();
 }

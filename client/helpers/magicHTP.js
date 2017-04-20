@@ -1,4 +1,5 @@
-_.prototype.hi = function(){
-  console.log ('hi');
-}
+var traffic = {};
 
+var traffic.send = function(func) {}
+
+var traffic.sendXS = function() {}
