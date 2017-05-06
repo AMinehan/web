@@ -1,5 +1,20 @@
 var traffic = {};
 
-var traffic.send = function(func) {}
+traffic.send = function (type, url, func, text) {
+  if (arguments.length <= 3) {
+    text = null;
+  }
+  var request;
+  var isBadBrowser = window.XDomainRequest ? true : false;
 
-var traffic.sendXS = function() {}
+  if (isBadBrowser) {
+    request = new window.XDomainRequest();
+  } else {
+    request = new XMLHttpRequest();
+  }
+  request.open(type, url, true);
+  request.addEventListener('load', function(){
+    func(request.responseText);
+  });
+  request.send(text)
+}

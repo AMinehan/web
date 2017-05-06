@@ -1,4 +1,5 @@
 var helpers = require('./helpers.js');
+var express = require('express');
 
 module.exports = function (app, express) {
 

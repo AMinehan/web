@@ -1,0 +1,27 @@
+.title {
+  background-color: red;
+}
+.header {
+  text-align: center;
+}
+.mazeInput {
+  margin-left: 48%;
+  margin-right: 50%;
+  margin-top: 10px;
+  width: 50px;
+}
+.maze {
+  white-space: pre;
+  font-family: "courier new";
+  font-weight: 100;
+}
+.line {
+  margin: 0;
+  text-align: center;
+}
+.engoification {
+  border-style: solid;
+  margin-left: 48%;
+  margin-top: 10px;
+  width: 50px;
+}

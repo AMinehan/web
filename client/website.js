@@ -14,5 +14,5 @@ if(window.attachEvent) {
 }
 
 function main () {
-  _.hello();
+  console.log(_.escape('1<2>3!4@5#6$7*8*9{10}11|'));
 }
