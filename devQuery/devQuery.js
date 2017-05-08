@@ -1,16 +1,126 @@
 $(document).ready(function(){
+  let bars = [];
+  let pointingAt = 22;
+  let force = 0;
+  let offset = 0;
+  let cx, cy, neg;
+  let spinning = false;
+  $('.lucky').click(function(){
+    bars = [];
+    offset = 0;
+    force = 0
+    pointingAt = 22;
+    $('.barholder').css("display", "initial");
+    let bar, val, holding;
+    for (let i = 0; i < 90; i++){
+      val = Math.floor((Math.random() * 22) ** 2);
+      if (val < 5) {
+        val = 'bankrupt!';
+      }
+      bar = $('<div class="bar">_' + val + "</div>");
+      bars.push(bar);
+      bar.appendTo($(".barholder"));
+      positionBars(offset);
+    }
+    let pointer = $('<div class="pointer"></div>');
+    pointer.text("V");
+    pointer.appendTo($(".barholder"));
+    console.log(bars[22].text())
+    $('.barholder').mousedown(function(e){
+      if (spinning){
+        return;
+      }
+      cx = e.clientX;
+      cy = e.clientY;
+    })
+    $('.barholder').mouseup(function(e){
+      if (spinning) {
+        return;
+      }
+      spinning = true;
+      let tick = 0;
+      force = ((cx - e.clientX) + (cy - e.clientY)) * -10;
+      if (force < 0) {
+        force = Math.abs(force);
+        neg = true;
+        spinify();
+      } else {
+        neg = false;
+        spinify();
+      }
+    })
+  })
+
+  const spinify = function(){
+    if (force / 30 > 1) {
+      tick = force / 30;
+    } else {
+      tick = 1;
+    }
+    force -= tick;
+
+    if (!neg) {
+    pointingAt -= (tick / 4)
+    offset += tick;
+    } else {
+      pointingAt += (tick / 4)
+      offset -= tick;
+    }
+    while (offset > 360) {
+      offset -= 360;
+    }
+    while (offset < -360) {
+      offset += 360;
+    }
+    positionBars(offset);
+    if (Math.abs(force) > 1) {
+      setTimeout(spinify, 100);
+    } else {
+      pointingAt = Math.ceil(pointingAt);
+      while (pointingAt >= bars.length) {
+        pointingAt -= bars.length;
+      }
+      while (pointingAt < 0) {
+        pointingAt += bars.length;
+      }
+      console.log(bars[pointingAt].text());
+      if (bars[pointingAt].text().slice(1) === 'bankrupt!'){
+        spinning = false;
+        return;
+      }
+      spinning = false;
+      setTimeout(function(){
+        build(Number(bars[pointingAt].text().slice(1)))
+        $('.barholder').children('div').remove();
+      }, 5000)
+    }
+  }
+
+  const positionBars = function(val){
+
+    for (let i = 0; i < bars.length; i++){
+      bars[i].css("webkit-transform", "rotate(" + ((i * 4) + val) + "deg)" );
+    }
+  }
+
+
   $('.engoification').click(function(){
     let mazeSize = Number($('.mazeInput').val());
     if (Number.isNaN(mazeSize) || mazeSize < 3 || mazeSize > 500){
       alert('that is not a valid number D:');
       $('.mazeInput').val('')
     } else {
-      $('.maze').children('div').remove();
       build(mazeSize);
     }
   })
+
+  const randColor = function() {
+    return "" + Math.floor(Math.random() * 255) + ", " + Math.floor(Math.random() * 255) + ", " + Math.floor(Math.random() * 255);
+  }
+
   const build = function(n) {
-    console.log(n)
+    $('.barholder').css("display", "none");
+    $('.maze').children('div').remove();
     let theMatrix = [];
     for (let i = 0; i < n; i++){
       theMatrix.push([]);
@@ -21,12 +131,12 @@ $(document).ready(function(){
     theMatrix[0][0] = 1;
     let moves = {'high': [[0,1], [1,0]], 'medium': [], 'low': [], 'total': 2};
     pathFinder(theMatrix, moves, n);
-    console.log(theMatrix, moves);
+    // console.log(theMatrix);
     fillEmptySpace(theMatrix, moves, n);
-    console.log(theMatrix, moves);
+    // console.log(theMatrix);
     theMatrix = placeWalls(theMatrix, n);
     removeWalls(theMatrix);
-    console.log(theMatrix);
+    // console.log(theMatrix);
     render(theMatrix);
     display(theMatrix);
   }
@@ -34,7 +144,7 @@ $(document).ready(function(){
     let result = [];
     let wall = ['X'];
     for (let i = 0; i < n; i++) {
-      wall.push('══');
+      wall.push('═══');
       wall.push('X');
     }
     result.push(wall.slice());
@@ -42,7 +152,7 @@ $(document).ready(function(){
       result.push(['║'])
       for (let j = 0; j < n; j++) {
         result[result.length - 1].push(arr[i][j])
-        result[result.length - 1].push(' ║');
+        result[result.length - 1].push('  ║');
       }
       result.push(wall.slice())
     }
@@ -52,20 +162,19 @@ $(document).ready(function(){
   const removeWalls = function(arr) {
     for (let i = 1; i < arr.length; i += 2){
       for (let j = 1; j < arr[i].length; j += 2){
-        console.log(arr[i][j])
         if (arr[i][j] === 1 || arr[i][j] === 5){
-          arr[i - 1][j] = '  ';
+          arr[i - 1][j] = '   ';
         } else if (arr[i][j] === 2 || arr[i][j] === 6){
-          arr[i][j + 1] = '  ';
+          arr[i][j + 1] = '   ';
         } else if (arr[i][j] === 3 || arr[i][j] === 7){
-          arr[i + 1][j] = '  ';
+          arr[i + 1][j] = '   ';
         } else if (arr[i][j] === 4 || arr[i][j] === 8){
-          arr[i][j - 1] = '  ';
+          arr[i][j - 1] = '   ';
         }
         arr[i][j] = ' ';
       }
     }
-    arr[arr.length - 1][arr.length - 2] = '  ';
+    arr[arr.length - 1][arr.length - 2] = '   ';
   }
 
   const render = function(arr){
@@ -73,16 +182,16 @@ $(document).ready(function(){
     let val = 0
     for (let i = 0; i < arr.length; i += 2){
       for (let j = 0; j < arr[i].length; j += 2) {
-        if (i > 0 && arr[i - 1][j] !== '  '){
+        if (i > 0 && arr[i - 1][j] !== '   '){
           val += 1000
         }
-        if (i < arr.length - 1 && arr[i + 1][j] !== '  '){
+        if (i < arr.length - 1 && arr[i + 1][j] !== '   '){
           val += 10
         }
-        if (j > 0 && arr[i][j - 1] !== '  ') {
+        if (j > 0 && arr[i][j - 1] !== '   ') {
           val += 1
         }
-        if (j < arr[i].length - 1 && arr[i][j + 1] !== '  '){
+        if (j < arr[i].length - 1 && arr[i][j + 1] !== '   '){
           val += 100;
         }
         val = val.toString();
@@ -213,4 +322,6 @@ $(document).ready(function(){
       return move;
     }
   }
+
+
 })

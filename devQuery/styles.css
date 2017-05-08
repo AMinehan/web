@@ -2,12 +2,9 @@
   background-color: red;
 }
 .header {
-  text-align: center;
+  margin: auto;
 }
 .mazeInput {
-  margin-left: 48%;
-  margin-right: 50%;
-  margin-top: 10px;
   width: 50px;
 }
 .maze {
@@ -20,8 +17,39 @@
   text-align: center;
 }
 .engoification {
+  padding: 5px;
+  border-width: 1px;
   border-style: solid;
-  margin-left: 48%;
-  margin-top: 10px;
-  width: 50px;
+}
+.lucky {
+  padding: 5px;
+  border-width: 1px;
+  border-style: solid;
+}
+.barholder {
+  display: none;
+  position: fixed;
+  -webkit-user-select: none;
+  top: 50%;
+  left: 36.5%;
+}
+.pointer {
+  position: absolute;
+  -webkit-transform: translate(197px, -200px);
+  z-index: 45;
+}
+.bar {
+  position: fixed;
+  top: 50%;
+  left: 36.5%;
+  background-color: rgb(50, 255, 50);
+  height: 15px;
+  width: 200px;
+  -webkit-transform-origin: right bottom;
+}
+.mask {
+  z-index: 40;
+  position: fixed;
+  top: 50%;
+  left: 50%;
 }
