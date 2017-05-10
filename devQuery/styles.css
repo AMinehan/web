@@ -37,19 +37,21 @@
   display: none;
   position: fixed;
   -webkit-user-select: none;
+  -webkit-transform: translate(-200px, 0px);
   top: 50%;
   left: 50%;
-  margin-right: 200px;
 }
 .pointer {
   position: absolute;
-  -webkit-transform: translate(0px, -200px);
+  -webkit-transform: translate(200px, -200px);
   z-index: 45;
+  top: auto;
+  left: auto;
 }
 .bar {
-  position: fixed;
-  top: 50%;
-  left: 36.5%;
+  position: absolute;
+  top: auto;
+  left: auto;
   background-color: rgb(50, 255, 50);
   height: 15px;
   width: 200px;
