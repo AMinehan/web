@@ -1,5 +1,6 @@
 .title {
   background-color: red;
+  text-align: center;
 }
 .header {
   margin: auto;
@@ -9,6 +10,7 @@
 }
 .maze {
   white-space: pre;
+  padding-top: 10px;
   font-family: "courier new";
   font-weight: 100;
 }
@@ -26,16 +28,22 @@
   border-width: 1px;
   border-style: solid;
 }
+.escape {
+  padding: 5px;
+  border-width: 1px;
+  border-style: solid;
+}
 .barholder {
   display: none;
   position: fixed;
   -webkit-user-select: none;
   top: 50%;
-  left: 36.5%;
+  left: 50%;
+  margin-right: 200px;
 }
 .pointer {
   position: absolute;
-  -webkit-transform: translate(197px, -200px);
+  -webkit-transform: translate(0px, -200px);
   z-index: 45;
 }
 .bar {
@@ -46,6 +54,22 @@
   height: 15px;
   width: 200px;
   -webkit-transform-origin: right bottom;
+}
+.phone {
+  padding: 5px;
+  border-width: 1px;
+  border-style: solid;
+}
+.phonebox {
+  width: 250px;
+  position: fixed;
+  top: 15%;
+  left: 42%;
+  text-align: center;
+}
+.phonenum {
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
 }
 .mask {
   z-index: 40;

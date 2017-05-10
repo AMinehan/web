@@ -3,11 +3,57 @@ $(document).ready(function(){
   let pointingAt = 22;
   let force = 0;
   let offset = 0;
-  let cx, cy, neg;
+  let phone = '';
+  let cx, cy, neg, current;
   let spinning = false;
+  $('.phone').click(function(){
+    bars = [];
+    phone = '';
+    $('.barholder').children('div').remove();
+    offset = 0;
+    current = 'phone';
+    force = 0;
+    pointingAt = 22;
+    $('.maze').children('div').remove();
+    $('.barholder').css("display", "initial");
+    let bar, val, holding;
+    for (let i = 0; i < 90; i++) {
+      val = Math.floor(Math.random() * 11);
+      if (val > 9) {
+        val = 'bankrupt!';
+      }
+      bar = $('<div class="bar">_' + val + "</div>");
+      bars.push(bar);
+      bar.appendTo($(".barholder"));
+      positionBars(offset);
+    }
+    let pointer = $('<div class="pointer"></div>');
+    pointer.text("V");
+    pointer.appendTo($(".barholder"));
+    let prompt = $('<div class="phonebox">Please enter your phone number:<br><span class="phonenum"></span></div>');
+    prompt.appendTo($(".barholder"));
+
+  })
+
+  $('.escape').click(function(){
+    let page = $('body').html();
+    let result = '';
+    let escapes = {' ': '&#32;', '!': '&#33;', '"': '&#34;', '#': '&#35;', '$': '&#36;', '%': '&#37;', '&': '&#38;', "'": '&#39;', '(': '&#40;', ')': '&#41;', '*': '&#42;', '+': '&#43;', ',': '&#44;', '-': '&#45;', '.': '&#46;', '/': '&#47;', ':': '&#58;', ';': '&#59;', '<': '&#60;', '=': '&#61;', '>': '&#62;', '?': '&#63;', '@': '&#64;', '[': '&#91;', '\\': '&#92;', ']': '&#93;', '^': '&#94;', '_': '&#95;', '`': '&#96;', '{': '&#123;', '|': '&#124;', '}': '&#125;' };
+    for (let i = 0; i < page.length; i++) {
+      if (escapes.hasOwnProperty(page[i])) {
+        result += escapes[page[i]]
+      } else {
+        result += page[i];
+      }
+    }
+    $('body').html(result);
+  })
+
   $('.lucky').click(function(){
     bars = [];
     offset = 0;
+    $('.barholder').children().remove();
+    current = 'maze';
     force = 0
     pointingAt = 22;
     $('.barholder').css("display", "initial");
@@ -26,7 +72,9 @@ $(document).ready(function(){
     pointer.text("V");
     pointer.appendTo($(".barholder"));
     console.log(bars[22].text())
-    $('.barholder').mousedown(function(e){
+
+  })
+  $('.barholder').mousedown(function(e){
       if (spinning){
         return;
       }
@@ -49,21 +97,15 @@ $(document).ready(function(){
         spinify();
       }
     })
-  })
 
   const spinify = function(){
-    if (force / 30 > 1) {
-      tick = force / 30;
-    } else {
-      tick = 1;
-    }
+    tick = force / 60;
+
     force -= tick;
 
     if (!neg) {
-    pointingAt -= (tick / 4)
     offset += tick;
     } else {
-      pointingAt += (tick / 4)
       offset -= tick;
     }
     while (offset > 360) {
@@ -73,10 +115,10 @@ $(document).ready(function(){
       offset += 360;
     }
     positionBars(offset);
-    if (Math.abs(force) > 1) {
-      setTimeout(spinify, 100);
+    if (Math.abs(force) > 8) {
+      setTimeout(spinify, 50);
     } else {
-      pointingAt = Math.ceil(pointingAt);
+      pointingAt = Math.abs(Math.ceil(((360 - offset) / 4) + 22));
       while (pointingAt >= bars.length) {
         pointingAt -= bars.length;
       }
@@ -88,25 +130,47 @@ $(document).ready(function(){
         spinning = false;
         return;
       }
-      spinning = false;
-      setTimeout(function(){
-        build(Number(bars[pointingAt].text().slice(1)))
-        $('.barholder').children('div').remove();
-      }, 5000)
+
+      if (current === 'maze') {
+        setTimeout(function(){
+          spinning = false;
+          build(Number(bars[pointingAt].text().slice(1)))
+          $('.barholder').children().remove();
+
+        }, 5000)
+      } else if (current === 'phone') {
+        spinning = false;
+        phone += bars[pointingAt].text().slice(1);
+        if (phone.length === 3) {
+          phone = '(' + phone + ')';
+        } else if (phone.length === 8) {
+          phone += '-';
+        }
+
+        $(".phonenum").text(phone)
+        if (phone.length === 13) {
+          spinning = true;
+          setTimeout(function(){
+            phone = '';
+            spinning = false;
+            $('.barholder').children().remove();
+          }, 5000)
+        }
+      }
     }
   }
 
   const positionBars = function(val){
 
     for (let i = 0; i < bars.length; i++){
-      bars[i].css("webkit-transform", "rotate(" + ((i * 4) + val) + "deg)" );
+      bars[i].css("-webkit-transform", "rotate(" + ((i * 4) + val) + "deg)" );
     }
   }
 
 
   $('.engoification').click(function(){
     let mazeSize = Number($('.mazeInput').val());
-    if (Number.isNaN(mazeSize) || mazeSize < 3 || mazeSize > 500){
+    if (Number.isNaN(mazeSize) || mazeSize < 1 || mazeSize > 3000){
       alert('that is not a valid number D:');
       $('.mazeInput').val('')
     } else {
@@ -120,6 +184,7 @@ $(document).ready(function(){
 
   const build = function(n) {
     $('.barholder').css("display", "none");
+    $('.barholder').children('div').remove();
     $('.maze').children('div').remove();
     let theMatrix = [];
     for (let i = 0; i < n; i++){
