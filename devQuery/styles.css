@@ -65,7 +65,7 @@
 .phonebox {
   width: 250px;
   position: absolute;
-  -webkit-transform: translate(100px, -250px);
+  -webkit-transform: translate(80px, -250px);
   text-align: center;
 }
 .phonenum {
